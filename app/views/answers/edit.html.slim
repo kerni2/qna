@@ -1,0 +1,11 @@
+h2 Edit Answer
+
+= form_with model: [@question, @answer], local: true do |form|
+  p
+    = form.label :body
+    br
+    = form.text_area :body, id: :question_body, rows: 7, cols: 60
+
+  p = form.submit
+
+p = link_to 'Back', question_path(@question)
