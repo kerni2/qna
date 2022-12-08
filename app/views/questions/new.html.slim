@@ -1,5 +1,7 @@
 h2 New Question
 
+p = render 'shared/errors', resource: @question
+
 = form_with model: @question, local: true do |form|
   p
     = form.label :title
@@ -11,6 +13,6 @@ h2 New Question
     br
     = form.text_area :body, id: :question_body, rows: 7, cols: 60
 
-  p = form.submit
+  p = form.submit 'Ask'
 
 p = link_to 'Back', questions_path
