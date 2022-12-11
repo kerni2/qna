@@ -10,6 +10,11 @@ h2 Answers
 ol
   = render @question.answers
 
-p = link_to 'New Answer', new_question_answer_path(@question)
+= form_with url: question_answers_path(@question), local: true do |form|
+  p
+    = form.label :body
+    br
+    = form.text_area :body, name: 'answer[body]', rows: 7, cols: 60
+    p = form.submit 'Add Answer'
 
 p = link_to 'Back to Questions', questions_path

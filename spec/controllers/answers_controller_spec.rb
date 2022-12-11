@@ -2,23 +2,13 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
 
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question) }
-
-  describe 'GET #new' do
-    before { get :new, params: { question_id: question.id } }
-
-    it 'assigns a new Answer to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'renders new view' do
-      expect(response).to render_template :new
-    end
-  end
+  let(:user) { create(:user) }
+  let(:question) { create(:question, author: user) }
+  let(:answer) { create(:answer, question: question, author: user) }
 
   describe 'GET #edit' do
-    before { get :edit, params: { id: answer, question_id: question.id } }
+    before { login(user) }
+    before { get :edit, params: { id: answer, question_id: question } }
 
     it 'assigns requested answer to @answer' do
       expect(assigns(:answer)).to eq answer
@@ -30,10 +20,11 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
+    before { login(user) }
 
     context 'with valid attributes' do
       it 'save a new answer in the database' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question.id } }.to change(Answer, :count).by(1)
+        expect { post :create, params: { answer: { body: 'Some Body', user_id: user }, question_id: question.id } }.to change(Answer, :count).by(1)
       end
 
       it 'redirects to question page' do
@@ -49,12 +40,13 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'renders new view' do
         post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question.id }
-        expect(response).to render_template :new
+        expect(response).to redirect_to question_path(answer.question)
       end
     end
   end
 
   describe 'PATCH #update' do
+    before { login(user) }
 
     context 'with valid attributes' do
       it 'assigns requested answer to @answer' do
@@ -75,9 +67,11 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'with invalid attributes' do
+      let!(:answer) { create(:answer, body: 'MyText') }
       before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), question_id: question.id } }
 
       it 'does not change answer' do
+
         question.reload
         expect(answer.body).to eq 'MyText'
       end
@@ -89,8 +83,9 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    before { login(user) }
     let!(:question) { create(:question) }
-    let!(:answer) { create(:answer, question: question) }
+    let!(:answer) { create(:answer, question: question, author: user) }
 
     it 'delete the answer' do
       expect { delete :destroy, params: { id: answer, question_id: question.id } }.to change(Answer, :count).by(-1)
