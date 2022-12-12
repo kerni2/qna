@@ -1,5 +1,5 @@
 li
   p = answer.body
-  => link_to 'Edit', edit_question_answer_path(answer.question, answer)
+  => link_to 'Edit Answer', edit_question_answer_path(answer.question, answer)
 
-  => link_to 'Delete', question_answer_path(answer.question, answer), method: :delete, data: { confirm: 'Are you sure?' }
+  => link_to 'Delete Answer', question_answer_path(answer.question, answer), method: :delete, data: { confirm: 'Are you sure?' }
