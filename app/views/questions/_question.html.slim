@@ -1,0 +1,18 @@
+.question
+  h1 = question.title
+  p = question.body
+
+  - if user_signed_in? && question.author == current_user
+    p = link_to 'Edit', '#', class: 'edit-question-link'
+
+    .question-errors
+      = render 'shared/errors', resource: question
+
+    = form_with model: question, class: 'hidden', html: { id: 'edit-question-form' }, local: false do |form|
+      p = form.label :title
+      p = form.text_field :title
+      p = form.label :body
+      p = form.text_area :body, id: :question_body, rows: 7, cols: 60
+      p = form.submit 'Update'
+
+    = link_to 'Delete', question, local: true, method: :delete, data: { confirm: 'Are you sure?' }

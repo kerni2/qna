@@ -14,7 +14,9 @@ feature 'User can delete question', %q{
     scenario 'can delete his own question' do
       sign_in(user)
       visit question_path(question)
-      click_on 'Delete'
+      within '.question' do
+        click_on 'Delete'
+      end
 
       expect(page).to have_content 'Question successfully deleted.'
       expect(page).not_to have_content question.title
@@ -23,21 +25,21 @@ feature 'User can delete question', %q{
 
     scenario "can't delete another user's question" do
       user = create(:user)
+      answer = create(:answer)
       sign_in(user)
       visit question_path(question)
-      click_on 'Delete'
+      within '.question' do
+        expect(page).not_to have_content 'Delete'
+      end
 
-      expect(page).to have_content "You can't delete someone else's question."
-      expect(page).to have_content question.title
-      expect(page).to have_content question.body
     end
   end
 
-  scenario "Unauthinticated user can't delete answers" do
+  scenario "Unauthinticated user can't delete question" do
     visit question_path(question)
-    click_on 'Delete'
+    within '.question' do
+      expect(page).not_to have_content 'Delete'
+    end
 
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
-
 end

@@ -6,32 +6,37 @@ feature 'User can create answer', %q{
   I'd like to be able to write a answer
 } do
 
+  given(:user) { create(:user) }
   given!(:question) { create(:question) }
-  given!(:answers) { create_list(:answer, 3, question: question) }
 
   describe 'Authinticated user' do
-    given(:user) { create(:user) }
 
     background { sign_in(user) }
 
     background { visit question_path(question) }
 
-    scenario 'add answer' do
-      fill_in 'answer[body]', with: 'Some Body'
-      click_on 'Add Answer'
+    scenario 'add answer', js:true do
+      within '.new-answer' do
+        fill_in 'answer[body]', with: 'Some Body'
+        click_on 'Add Answer'
+      end
 
-      expect(page).to have_content 'Your answer successfully created.'
-      expect(page).to have_content 'Some Body'
+      expect(current_path).to eq question_path(question)
+      within '.answers' do
+        expect(page).to have_content 'Some Body'
+      end
     end
 
-    scenario 'add answer with errors' do
+    scenario 'add answer with errors', js:true do
       click_on 'Add Answer'
 
-      expect(page).to have_content "Answer body can't be blank"
+      within '.answer-errors' do
+        expect(page).to have_content "Body can't be blank"
+      end
     end
   end
 
-  scenario 'Unauthinticated user tries to ask a question' do
+  scenario 'Unauthinticated user tries to create answer' do
     visit question_path(question)
     click_on 'Add Answer'
     expect(page).to have_content 'You need to sign in or sign up before continuing.'

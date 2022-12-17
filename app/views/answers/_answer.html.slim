@@ -1,5 +1,14 @@
-li
-  p = answer.body
-  => link_to 'Edit Answer', edit_question_answer_path(answer.question, answer)
+= content_tag :li, id: "answer-#{answer.id}"
+  => answer.body
+  - if user_signed_in? && answer.author == current_user
+    => link_to 'Mark as Best', mark_as_best_answer_path(answer), method: :post, local: false
+    => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    = link_to 'Delete', answer, method: :delete, remote: true
 
-  => link_to 'Delete Answer', question_answer_path(answer.question, answer), method: :delete, data: { confirm: 'Are you sure?' }
+    =content_tag :div, class: "answer-edit-errors-#{answer.id}"
+      = render 'shared/errors', resource: answer
+
+    = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
+      p = f.label :body
+      p = f.text_area :body, name: 'answer[body]', rows: 7, cols: 60
+      p = f.submit 'Save'
