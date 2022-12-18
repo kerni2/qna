@@ -2,7 +2,7 @@ class AnswersController < ApplicationController
 
   before_action :authenticate_user!
   before_action :find_question, only: [:create, :edit]
-  before_action :find_answer, only: [:edit, :update, :destroy]
+  before_action :find_answer, only: [:edit, :update, :destroy, :mark_as_best]
 
   def edit
   end
@@ -10,29 +10,22 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user_id = current_user.id
-
-    if @answer.save
-      redirect_to question_path(@question), notice: 'Your answer successfully created.'
-    else
-      redirect_to question_path(@question), notice: "Answer body can't be blank"
-    end
+    @answer.save
   end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to question_path(@answer.question)
-    else
-      render :edit
-    end
+    @answer.update(answer_params)
+    @question = @answer.question
   end
 
   def destroy
-    if @answer.user_id == current_user.id
-      @answer.destroy
-      redirect_to question_path(@answer.question), notice: 'Answer successfully deleted.'
-    else
-      redirect_to question_path(@answer.question), notice: "You can't delete someone else's answer."
-    end
+    @answer.destroy
+  end
+
+  def mark_as_best
+    question = @answer.question
+    question.update(best_answer_id: @answer.id)
+    redirect_to question
   end
 
   private

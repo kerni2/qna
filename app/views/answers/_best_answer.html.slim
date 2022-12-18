@@ -1,0 +1,15 @@
+= content_tag :li, id: "answer-#{@best_answer.id}"
+  b => "[Best]"
+  => @best_answer.body
+  - if user_signed_in? && @best_answer.author == current_user
+    => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: @best_answer.id }
+    = link_to 'Delete', @best_answer, method: :delete, remote: true
+
+    =content_tag :div, class: "answer-edit-errors-#{@best_answer.id}"
+      = render 'shared/errors', resource: @best_answer
+
+    = form_with model: @best_answer, class: 'hidden', html: { id: "edit-answer-#{@best_answer.id}" }, local: false do |f|
+      p = f.label :body
+      p = f.text_area :body, name: 'answer[body]', rows: 7, cols: 60
+      p = f.submit 'Save'
+      

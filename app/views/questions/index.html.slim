@@ -1,21 +1,9 @@
 h2 Questions
 
-table
-  thead
-    tr
-      th Title
-      th
-      th
-      th
-
-  tbody
-    - @questions.each do |question|
-      tr
-        td = question.title
-        td = link_to 'Show', question
-        td = link_to 'Edit', edit_question_path(question)
-        td = link_to 'Delete', question, method: :delete, data: { confirm: 'Are you sure?' }
-
 br
+
+- @questions.each do |question|
+  = link_to question.title, question_path(question)
+  br
 
 = link_to 'Ask question', new_question_path
