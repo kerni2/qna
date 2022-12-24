@@ -25,7 +25,6 @@ feature 'User can delete question', %q{
 
     scenario "can't delete another user's question" do
       user = create(:user)
-      answer = create(:answer)
       sign_in(user)
       visit question_path(question)
       within '.question' do

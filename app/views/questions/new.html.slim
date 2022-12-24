@@ -7,11 +7,14 @@ p = render 'shared/errors', resource: @question
     = form.label :title
     br
     = form.text_field :title
-
   p
     = form.label :body
     br
     = form.text_area :body, id: :question_body, rows: 7, cols: 60
+  p
+    = form.label :files
+    br
+    = form.file_field :files, multiple: true
 
   p = form.submit 'Ask'
 
