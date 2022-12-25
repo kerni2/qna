@@ -9,5 +9,7 @@ class Question < ApplicationRecord
              foreign_key: 'best_answer_id',
              optional: true
 
+  has_many_attached :files
+
   validates :title, :body, :author, presence: true
 end

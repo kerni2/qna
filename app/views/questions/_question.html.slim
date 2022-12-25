@@ -2,6 +2,14 @@
   h1 = question.title
   p = question.body
 
+  .files
+    - if question.files.attached?
+      - question.files.each do |file|
+        = content_tag :div, id: "question-file-#{file.id}"
+          p = link_to file.filename.to_s, url_for(file)
+          - if user_signed_in? && question.author == current_user
+            = link_to 'Delete',  attachment_path(file, question_id: question.id), method: :delete, local: false
+
   - if user_signed_in? && question.author == current_user
     p = link_to 'Edit', '#', class: 'edit-question-link'
 
@@ -13,6 +21,8 @@
       p = form.text_field :title
       p = form.label :body
       p = form.text_area :body, id: :question_body, rows: 7, cols: 60
+      p = form.label :files
+      p = form.file_field :files, multiple: true, direct_upload: true
       p = form.submit 'Update'
 
     = link_to 'Delete', question, local: true, method: :delete, data: { confirm: 'Are you sure?' }

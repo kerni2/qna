@@ -55,5 +55,21 @@ feature 'User can edit his answer', %q{
         expect(page).not_to have_content 'Edit'
       end
     end
+
+    scenario 'edit his answer with attached files', js: true do
+      within '.answers' do
+        click_on('Edit')
+        fill_in 'Body', with: 'edited answer'
+
+        attach_file 'Files', ["#{Rails.root}/spec/models/answer_spec.rb", "#{Rails.root}/spec/models/question_spec.rb"]
+
+        click_on('Save')
+
+        expect(page).not_to have_content answer.body
+        expect(page).to have_content 'edited answer'
+        expect(page).to have_link 'answer_spec.rb'
+        expect(page).to have_link 'question_spec.rb'
+      end
+    end
   end
 end
