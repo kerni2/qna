@@ -15,6 +15,17 @@ p = render 'shared/errors', resource: @question
     = form.label :files
     br
     = form.file_field :files, multiple: true
+  p Links:
+  p
+    = form.fields_for :links do |links|
+      p
+        = links.label :name, 'Link name'
+        br
+        = links.text_field :name
+      p
+        = links.label :url
+        br
+        = links.text_field :url
 
   p = form.submit 'Ask'
 
