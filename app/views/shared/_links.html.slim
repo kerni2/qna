@@ -1,0 +1,11 @@
+- resource.links.each do |link|
+  - if link.persisted?
+    => link_to link.name,
+              link.url,
+              class: "#{'gist-link' if link.gist?}",
+              data: { link_id: link.id }
+    - if user_signed_in? && resource.author == current_user
+      => link_to 'Delete',  link_path(link, question_id: question_id), method: :delete, local: false
+
+    - if link.gist?
+      div class="gist-content hidden" data-link-id="#{link.id}"
