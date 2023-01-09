@@ -25,6 +25,7 @@ class AnswersController < ApplicationController
   def mark_as_best
     question = @answer.question
     question.update(best_answer_id: @answer.id)
+    question.reward.update(user_id: @answer.user_id) if question.reward.present?
     redirect_to question
   end
 
@@ -39,6 +40,7 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, files: [],
+                                   links_attributes: [:id, :name, :url, :_destroy])
   end
 end

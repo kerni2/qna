@@ -5,6 +5,10 @@
     => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     = link_to 'Delete', answer, method: :delete, remote: true
 
+  .links
+    p Links:
+    = render 'shared/links', resource: answer, question_id: answer.question.id
+
   .answer-files
     - if answer.files.attached?
       - answer.files.each do |file|
@@ -20,4 +24,10 @@
       p = f.text_area :body, name: 'answer[body]', rows: 7, cols: 60
       p = f.label :files
       p = f.file_field :files, multiple: true, direct_upload: true
+      p#links Links:
+      = f.fields_for :links do |l|
+        = render 'link_fields', f: l
+      = link_to_add_association 'add link', f, :links, \
+                                            'data-association-insertion-node' => '.nested-fields', \
+                                            'data-association-insertion-method' => 'after'
       p = f.submit 'Save'

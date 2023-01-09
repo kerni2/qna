@@ -1,0 +1,12 @@
+h2 My Rewards
+
+- if current_user.rewards.present?
+  - @rewards.each do |reward|
+    .reward
+      = link_to reward.question.title, question_path(reward.question)
+      = image_tag url_for(reward.image)
+      = reward.title
+- else
+  p You don't have rewards. Answer questions to get a reward.
+
+= link_to "Back", root_path

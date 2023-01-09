@@ -16,6 +16,22 @@ p = render 'shared/errors', resource: @question
     br
     = form.file_field :files, multiple: true
 
+  p#links Links:
+  = form.fields_for :links do |l|
+    = render 'link_fields', f: l
+
+  = link_to_add_association 'add link', form, :links, \
+                                        'data-association-insertion-node' => '.nested-fields', \
+                                        'data-association-insertion-method' => 'after'
+
+  .reward
+    p Reward:
+    = form.fields_for :reward_attributes do |r|
+      = r.label :title, 'Title award'
+      = r.text_field :title
+      = r.label :image
+      = r.file_field :image, multiple: false, direct_upload: true
+
   p = form.submit 'Ask'
 
 p = link_to 'Back', questions_path

@@ -9,7 +9,10 @@
           p = link_to file.filename.to_s, url_for(file)
           - if user_signed_in? && question.author == current_user
             = link_to 'Delete',  attachment_path(file, question_id: question.id), method: :delete, local: false
-
+  .links
+    p Links:
+    = render 'shared/links', resource: question, question_id: question.id
+        
   - if user_signed_in? && question.author == current_user
     p = link_to 'Edit', '#', class: 'edit-question-link'
 
@@ -23,6 +26,16 @@
       p = form.text_area :body, id: :question_body, rows: 7, cols: 60
       p = form.label :files
       p = form.file_field :files, multiple: true, direct_upload: true
+      p#links Links:
+      = form.fields_for :links do |l|
+        = render 'link_fields', f: l
+      = link_to_add_association 'add link', form, :links, \
+                                            'data-association-insertion-node' => '.nested-fields', \
+                                            'data-association-insertion-method' => 'after'
       p = form.submit 'Update'
 
     = link_to 'Delete', question, local: true, method: :delete, data: { confirm: 'Are you sure?' }
+    - if question.reward
+      p
+        = 'Reward:'
+        = question.reward.title
