@@ -1,5 +1,25 @@
 = content_tag :li, id: "answer-#{answer.id}"
   => answer.body
+  
+  div class="answer-votes"
+    b Rating:
+    - if user_signed_in?
+      => link_to 'like', like_answer_path(answer), \
+                         class: 'answer-like', \
+                         method: :post, \
+                         data: { answer_id: answer.id, type: :json }, \
+                         remote: true \
+                         if answer.author != current_user
+
+      b class="answer-#{answer.id}-rating" => answer.rating
+
+      = link_to 'unlike', unlike_answer_path(answer), \
+                          class: 'answer-unlike', \
+                          method: :post, \
+                          data: { answer_id: answer.id, type: :json }, \
+                          remote: true \
+                          if answer.author != current_user
+
   - if user_signed_in? && answer.author == current_user
     => link_to 'Mark as Best', mark_as_best_answer_path(answer), method: :post, local: false
     => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }

@@ -10,7 +10,7 @@ ol.answers
 .answer-errors
   = render 'shared/errors', resource: @answer
 
-= form_with model: [@question, @answer], class: 'new-answer', local: false do |form|
+= form_with model: [@question, @answer], class: 'new-answer', local: false, data: { type: :json } do |form|
   p = form.label :body
   p = form.text_area :body, id: :answer_body, name: 'answer[body]', rows: 7, cols: 60
   p = form.label :files
