@@ -5,7 +5,12 @@ Rails.application.routes.draw do
   resources :questions, except: [:edit] do
     resources :answers, shallow: true, except: [:index, :show, :new] do
       post :mark_as_best, on: :member
+      post :like, on: :member
+      post :unlike, on: :member
     end
+
+    post :like, on: :member
+    post :unlike, on: :member
   end
 
   resources :attachments, only: [:destroy]

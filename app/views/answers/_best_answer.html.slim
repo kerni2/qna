@@ -1,6 +1,26 @@
 = content_tag :li, id: "answer-#{@best_answer.id}"
   b => "[Best]"
   => @best_answer.body
+
+  div class="answer-votes"
+    b Rating:
+    - if user_signed_in?
+      => link_to 'like', like_answer_path(@best_answer), \
+                         class: 'answer-like', \
+                         method: :post, \
+                         data: { answer_id: @best_answer.id, type: :json }, \
+                         remote: true \
+                         if @best_answer.author != current_user
+
+      b class="answer-#{@best_answer.id}-rating" => @best_answer.rating
+
+      = link_to 'unlike', unlike_answer_path(@best_answer), \
+                          class: 'answer-unlike', \
+                          method: :post, \
+                          data: { answer_id: @best_answer.id, type: :json }, \
+                          remote: true \
+                          if @best_answer.author != current_user
+                          
   - if @best_answer.question.reward.present?
     .reward
       = image_tag url_for(@best_answer.question.reward.image)

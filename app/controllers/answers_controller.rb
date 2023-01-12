@@ -1,4 +1,5 @@
 class AnswersController < ApplicationController
+  include Voted
 
   before_action :authenticate_user!
   before_action :find_question, only: [:create, :edit]
@@ -11,6 +12,7 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user_id = current_user.id
     @answer.save
+
   end
 
   def update
