@@ -10,7 +10,6 @@ feature 'User can delete question', %q{
   given(:question) { create(:question, author: user) }
 
   describe 'Authinticated user' do
-
     scenario 'can delete his own question' do
       sign_in(user)
       visit question_path(question)

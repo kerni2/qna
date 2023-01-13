@@ -2,6 +2,25 @@
   h1 = question.title
   p = question.body
 
+  .question-votes
+    b Rating:
+    - if user_signed_in?
+      => link_to 'like', like_question_path(question), \
+                         class: 'question-like', \
+                         method: :post, \
+                         data: { type: :json }, \
+                         remote: true \
+                         if question.author != current_user
+
+      b class="question-rating" data-question-rating="#{question.rating}" => question.rating
+
+      = link_to 'unlike', unlike_question_path(question), \
+                          class: 'question-unlike', \
+                          method: :post, \
+                          data: { type: :json }, \
+                          remote: true \
+                          if question.author != current_user
+                          
   .files
     - if question.files.attached?
       - question.files.each do |file|

@@ -4,4 +4,12 @@ $(document).on('turbolinks:load', function() {
     $(this).hide()
     $('#edit-question-form').removeClass('hidden')
   })
+
+  $('.question-like').on('ajax:success', function(e) {
+    $('.question-rating').html(e.detail[0])
+  })
+
+  $('.question-unlike').on('ajax:success', function(e) {
+    $('.question-rating').html(e.detail[0])
+  })
 })
