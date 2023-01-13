@@ -10,7 +10,6 @@ feature 'User can create answer', %q{
   given!(:question) { create(:question) }
 
   describe 'Authinticated user', js:true do
-
     background { sign_in(user) }
 
     background { visit question_path(question) }

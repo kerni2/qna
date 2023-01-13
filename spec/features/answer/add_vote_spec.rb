@@ -11,7 +11,6 @@ feature 'User can add vote to answer', %q{
   given!(:answer) { create(:answer, question_id: question.id) }
 
   describe 'Authinticated user', js: true do
-
     background do
       sign_in(user)
       visit question_path(question)
