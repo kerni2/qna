@@ -1,0 +1,8 @@
+= form_with model: [commentable, comment], local: false do |f|
+  .comment-errors
+    = render 'shared/errors', resource: f.object
+
+  .new-comment
+    => f.label :body
+    => f.text_field :body
+  => f.submit 'Add Comment'

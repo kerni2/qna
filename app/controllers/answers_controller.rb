@@ -5,6 +5,8 @@ class AnswersController < ApplicationController
   before_action :find_question, only: [:create, :edit]
   before_action :find_answer, only: [:edit, :update, :destroy, :mark_as_best]
 
+  after_action :publish_answer, only: [:create]
+
   def edit
   end
 
@@ -12,7 +14,6 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user_id = current_user.id
     @answer.save
-
   end
 
   def update
@@ -44,5 +45,13 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body, files: [],
                                    links_attributes: [:id, :name, :url, :_destroy])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+    html = ApplicationController.render(partial: 'answers/answer_simple',
+                                        locals: { answer: @answer })
+    ActionCable.server.broadcast("question_#{@answer.question.id}",
+                                 { html: html, author_id: @answer.user_id })
   end
 end
