@@ -1,25 +1,23 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
-  after_action :publish_comment, only: [:create]
 
   def create
     @comment = commentable.comments.new(comment_params)
     @comment.user_id = current_user.id
     @comment.save
+    publish_comment unless @comment.errors.any?
   end
 
   private
 
   def publish_comment
-    return if @comment.errors.any?
-
     html = ApplicationController.render(
       partial: 'comments/comment',
       locals: { comment: @comment }
     )
 
     ActionCable.server.broadcast(
-      'comments_channel',
+      "comments_question_#{params[:id]}",
       { html: html,
         author_id: @comment.user_id,
         commentable: "#{@commentable.class.name.underscore}-#{@commentable.id}" }
