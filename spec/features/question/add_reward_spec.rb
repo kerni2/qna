@@ -7,8 +7,7 @@ feature 'User can add reward to question', %q{
 } do
 
   given(:user) { create(:user) }
-
-  scenario 'User adds reward when ask question', js:true do
+  scenario 'User adds reward when ask question', js: true do
     sign_in(user)
     visit new_question_path
 
@@ -17,12 +16,21 @@ feature 'User can add reward to question', %q{
 
     within '.reward' do
       attach_file 'Image', "#{Rails.root}/spec/support/assets/test.jpg"
-      fill_in 'Title award', with: 'Reward name'
+      fill_in 'Title', with: 'reward name'
+    end
+    click_on 'Ask'
+    within '.new-answer' do
+      fill_in 'answer[body]', with: 'Some Body'
+      click_on 'Add Answer'
     end
 
-    click_on 'Ask'
+    visit current_path
 
-    expect(page).to have_content 'Reward name'
+    click_on 'Mark as Best'
 
+    within '.reward' do
+      expect(page).to have_css("img[src*='test.jpg']")
+      expect(page).to have_content 'reward name'
+    end
   end
 end

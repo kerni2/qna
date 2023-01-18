@@ -1,5 +1,5 @@
 $('.answer-edit-errors-' + '<%= @answer.id %>').html("<%= render 'shared/errors', resource: @answer %>")
 
 <% if !@answer.errors.present? %>
-  $('.answers').html('<%= j render @question.answers %>')
+  $('#answer-' + "<%= @answer.id %>").replaceWith("<%= j render 'answer_simple', answer: @answer %>")
 <% end %>

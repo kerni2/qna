@@ -1,0 +1,20 @@
+= content_tag :li, id: "answer-#{answer.id}", class: "card"
+
+  => answer.body
+
+  .answer-votes
+    b> Rating:
+    b class="answer-#{answer.id}-rating" => answer.rating
+
+  .links
+    p Links:
+    - answer.links.each do |link|
+      - if link.persisted?
+        = link_to link.name,
+                  link.url,
+                  data: { link_id: link.id }
+
+  .answer-files
+    - if answer.files.attached?
+      - answer.files.each do |file|
+        p = link_to file.filename.to_s, url_for(file)

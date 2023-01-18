@@ -33,7 +33,8 @@ gem 'twitter-bootstrap-rails'
 gem 'jquery-rails'
 gem 'aws-sdk-s3', '~> 1'
 gem 'mini_magick'
-gem "cocoon"
+gem 'cocoon'
+gem 'gon'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -41,6 +42,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 4.0.0'
   gem 'factory_bot_rails'
   gem 'dotenv-rails'
+  gem 'action-cable-testing'
 end
 
 group :development do

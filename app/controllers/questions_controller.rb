@@ -9,11 +9,16 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = Answer.new
+    @answer = @question.answers.new
     @answer.links.new
     @best_answer = @question.best_answer
     @answers = @question.answers.where.not(id: @question.best_answer_id)
     @question.links.new
+    @question_comment = @question.comments.new
+    @answer_comment = @answer.comments.new
+
+    gon.question_id = @question.id
+    gon.answer_comment = @answer_comment
   end
 
   def new
@@ -32,6 +37,7 @@ class QuestionsController < ApplicationController
     else
       render :new
     end
+    publish_question unless @question.errors.any?
   end
 
   def update
@@ -58,5 +64,12 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, :body, files: [],
                                      links_attributes: [:name, :url, :id, :_destroy],
                                      reward_attributes: [:title, :image])
+  end
+
+  def publish_question
+    ActionCable.server.broadcast('questions_channel',
+      ApplicationController.render(partial: 'questions/question',
+                                   locals: { question: @question })
+    )
   end
 end

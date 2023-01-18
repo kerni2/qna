@@ -23,7 +23,7 @@ feature 'Authenticated user can edit his question', %q{
     background { visit question_path(question) }
 
     scenario 'edit his question', js: true do
-      within '.question' do
+      within '.question .actions' do
         click_on 'Edit'
         fill_in 'Title', with: 'new title'
         fill_in 'Body', with: 'new question text'
@@ -49,7 +49,7 @@ feature 'Authenticated user can edit his question', %q{
     end
 
     scenario 'edit his question with attached files', js: true do
-      within '.question' do
+      within '.question .actions' do
         click_on 'Edit'
         fill_in 'Title', with: 'new title'
         fill_in 'Body', with: 'new question text'
