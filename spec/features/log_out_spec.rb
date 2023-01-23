@@ -6,7 +6,7 @@ feature 'User can log out', %q{
   I'd like to be able to log out
 } do
 
-  given(:user) { create(:user) }
+  given(:user) { create(:user, :confirmed) }
 
   scenario 'Registered user tries to log out' do
     visit new_user_session_path
