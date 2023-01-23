@@ -4,29 +4,28 @@ div id="question-#{@question.id}" class="question"
 
   .question-votes
     b Rating:
-    - if user_signed_in?
-      => link_to 'like', like_question_path(@question), \
-                         class: 'question-like', \
-                         method: :post, \
-                         data: { type: :json }, \
-                         remote: true \
-                         if @question.author != current_user
+    => link_to 'like', like_question_path(@question), \
+                       class: 'question-like', \
+                       method: :post, \
+                       data: { type: :json }, \
+                       remote: true \
+                       if can?(:like, @question)
 
-      b class="question-rating" data-question-rating="#{@question.rating}" => @question.rating
+    b class="question-rating" data-question-rating="#{@question.rating}" => @question.rating
 
-      = link_to 'unlike', unlike_question_path(@question), \
-                          class: 'question-unlike', \
-                          method: :post, \
-                          data: { type: :json }, \
-                          remote: true \
-                          if @question.author != current_user
+    = link_to 'unlike', unlike_question_path(@question), \
+                        class: 'question-unlike', \
+                        method: :post, \
+                        data: { type: :json }, \
+                        remote: true \
+                        if can?(:unlike, @question)
 
   .files
     - if @question.files.attached?
       - @question.files.each do |file|
         = content_tag :div, id: "question-file-#{file.id}"
           p = link_to file.filename.to_s, url_for(file)
-          - if user_signed_in? && @question.author == current_user
+          - if can?(:destroy, @question)
             = link_to 'Delete',  attachment_path(file, question_id: @question.id), method: :delete, local: false
 
   .links
@@ -34,7 +33,7 @@ div id="question-#{@question.id}" class="question"
     = render 'shared/links', resource: @question, question_id: @question.id
 
   .actions
-    - if user_signed_in? && @question.author == current_user
+    - if can?(:update, @question)
       p = link_to 'Edit', '#', class: 'edit-question-link'
 
       .question-errors
@@ -55,7 +54,7 @@ div id="question-#{@question.id}" class="question"
                                               'data-association-insertion-node' => '.nested-fields', \
                                               'data-association-insertion-method' => 'after'
         = form.submit 'Update'
-
+    - if can?(:destroy, @question)
       = link_to 'Delete', @question, local: true, method: :delete, data: { confirm: 'Are you sure?' }
 
   h2 Question Comments
@@ -63,5 +62,5 @@ div id="question-#{@question.id}" class="question"
     => render @question.comments
 
   .new-question-comment
-    - if current_user
+    - if can?(:create, @question_comment)
       => render 'comments/form', commentable: @question, comment: @question_comment

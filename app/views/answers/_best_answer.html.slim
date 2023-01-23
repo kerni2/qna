@@ -4,29 +4,29 @@
 
   div class="answer-votes"
     b Rating:
-    - if user_signed_in?
-      => link_to 'like', like_answer_path(@best_answer), \
-                         class: 'answer-like', \
-                         method: :post, \
-                         data: { answer_id: @best_answer.id, type: :json }, \
-                         remote: true \
-                         if @best_answer.author != current_user
+    => link_to 'like', like_answer_path(@best_answer), \
+                       class: 'answer-like', \
+                       method: :post, \
+                       data: { answer_id: @best_answer.id, type: :json }, \
+                       remote: true \
+                       if can?(:like, @best_answer)
 
-      b class="answer-#{@best_answer.id}-rating" => @best_answer.rating
+    b class="answer-#{@best_answer.id}-rating" => @best_answer.rating
 
-      = link_to 'unlike', unlike_answer_path(@best_answer), \
-                          class: 'answer-unlike', \
-                          method: :post, \
-                          data: { answer_id: @best_answer.id, type: :json }, \
-                          remote: true \
-                          if @best_answer.author != current_user
+    = link_to 'unlike', unlike_answer_path(@best_answer), \
+                        class: 'answer-unlike', \
+                        method: :post, \
+                        data: { answer_id: @best_answer.id, type: :json }, \
+                        remote: true \
+                        if can?(:unlike, @best_answer)
                           
   - if @best_answer.question.reward.present?
     .reward
       = image_tag url_for(@best_answer.question.reward.image)
       = @best_answer.question.reward.title
-  - if user_signed_in? && @best_answer.author == current_user
+  - if can?(:update, Answer)
     => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: @best_answer.id }
+  - if can?(:destroy, Answer)
     = link_to 'Delete', @best_answer, method: :delete, remote: true
 
   .links
@@ -37,7 +37,7 @@
     - if @best_answer.files.attached?
       - @best_answer.files.each do |file|
         p = link_to file.filename.to_s, url_for(file)
-        - if user_signed_in? && @best_answer.author == current_user
+        - if can?(:destroy, @best_answer)
           = link_to 'Delete', attachment_path(file, question_id: @best_answer.question.id), method: :delete, local: false
 
     =content_tag :div, class: "answer-edit-errors-#{@best_answer.id}"

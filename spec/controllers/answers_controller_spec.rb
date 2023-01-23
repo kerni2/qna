@@ -3,8 +3,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
 
   let(:user) { create(:user) }
-  let(:question) { create(:question, author: user) }
-  let(:answer) { create(:answer, question: question, author: user) }
+  let(:question) { create(:question, user_id: user.id) }
 
   describe 'POST #create' do
     before { login(user) }
@@ -81,8 +80,8 @@ RSpec.describe AnswersController, type: :controller do
   describe 'POST #mark_as_best' do
     before { login(user) }
 
-    let!(:question) { create(:question) }
-    let!(:answer) { create(:answer, question: question, author: user) }
+    let!(:question) { create(:question, user_id: user.id) }
+    let!(:answer) { create(:answer, question_id: question.id) }
 
     it 'changes question attribute best_answer_id' do
       post :mark_as_best, params: { id: answer, answer: attributes_for(:answer) }, format: :js

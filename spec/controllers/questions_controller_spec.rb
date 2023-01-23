@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
+  let(:question) { create(:question, user_id: user.id) }
   let(:user) { create(:user) }
 
   describe 'GET #index' do
@@ -96,7 +96,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'changes question attributes' do
-        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js }
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body', user_id: user.id }, format: :js }
         question.reload
         expect(question.title).to eq 'new title'
         expect(question.body).to eq 'new body'
@@ -110,7 +110,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid attributes' do
-      let!(:question) { create(:question, title: 'MyString', body: 'MyText') }
+      let!(:question) { create(:question, title: 'MyString', body: 'MyText', user_id: user.id) }
       before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js }
 
       it 'does not change question' do

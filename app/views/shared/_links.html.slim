@@ -4,7 +4,7 @@
               link.url,
               class: "#{'gist-link' if link.gist?}",
               data: { link_id: link.id }
-    - if user_signed_in? && resource.author == current_user
+    - if can?(:destroy, resource)
       => link_to 'Delete',  link_path(link, question_id: question_id), method: :delete, local: false
 
     - if link.gist?
