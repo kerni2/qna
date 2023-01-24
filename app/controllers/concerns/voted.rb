@@ -7,6 +7,7 @@ module Voted
   end
 
   def like
+    authorize! :like, @resource
     vote_calculation(1)
   end
 

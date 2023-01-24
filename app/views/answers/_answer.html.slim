@@ -4,28 +4,29 @@
 
   .answer-votes
     b> Rating:
-    b class="answer-#{answer.id}-rating" => answer.rating
-    - if user_signed_in?
-      => link_to 'like', like_answer_path(answer), \
-                         class: 'answer-like', \
-                         method: :post, \
-                         data: { answer_id: answer.id, type: :json }, \
-                         remote: true \
-                         if answer.author != current_user
+    => link_to 'like', like_answer_path(answer), \
+                       class: 'answer-like', \
+                       method: :post, \
+                       data: { answer_id: answer.id, type: :json }, \
+                       remote: true \
+                       if can?(:like, answer)
 
-      = link_to 'unlike', unlike_answer_path(answer), \
-                          class: 'answer-unlike', \
-                          method: :post, \
-                          data: { answer_id: answer.id, type: :json }, \
-                          remote: true \
-                          if answer.author != current_user
+    b class="answer-#{answer.id}-rating" => answer.rating
+
+    = link_to 'unlike', unlike_answer_path(answer), \
+                        class: 'answer-unlike', \
+                        method: :post, \
+                        data: { answer_id: answer.id, type: :json }, \
+                        remote: true \
+                        if can?(:unlike, answer)
 
   .actions
-    - if answer.question.author == current_user
+    - if can?(:mark_as_best, answer)
       => link_to 'Mark as Best', mark_as_best_answer_path(answer), method: :post, local: false
 
-    - if answer.author == current_user
+    - if can?(:update, answer)
       => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    - if can?(:destroy, answer)
       = link_to 'Delete', answer, method: :delete, remote: true
 
     =content_tag :div, class: "answer-edit-errors-#{answer.id}"
@@ -49,7 +50,7 @@
     = render answer.comments
 
   div class="new-answer-#{answer.id}-comment"
-    - if current_user
+    - if can?(:create, @answer_comment)
       = render 'comments/form', commentable: answer, comment: @answer_comment
 
   .links
@@ -60,5 +61,5 @@
     - if answer.files.attached?
       - answer.files.each do |file|
         p = link_to file.filename.to_s, url_for(file)
-        - if user_signed_in? && answer.author == current_user
+        - if can?(:destroy, answer)
           = link_to 'Delete', attachment_path(file, question_id: answer.question.id), method: :delete, local: false

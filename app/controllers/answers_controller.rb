@@ -5,6 +5,8 @@ class AnswersController < ApplicationController
   before_action :find_question, only: [:create, :edit]
   before_action :find_answer, only: [:edit, :update, :destroy, :mark_as_best]
 
+  authorize_resource
+
   def edit
   end
 
