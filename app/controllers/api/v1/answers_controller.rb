@@ -27,7 +27,7 @@ class Api::V1::AnswersController < Api::V1::BaseController
   def update
     authorize! :update, @answer
     if @answer.update(answer_params)
-      render json: @answer, status: :created
+      render json: @answer, status: :created, serializer: AnswerSerializer
     else
       render json: { errors: @answer.errors }, status: :unprocessable_entity
     end
