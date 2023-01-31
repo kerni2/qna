@@ -9,6 +9,7 @@ RSpec.describe Question, type: :model do
   describe 'associations' do
     it { should have_many(:answers).dependent(:destroy) }
     it { should belong_to(:author).class_name('User') }
+    it { should have_many(:subscriptions).dependent(:destroy) }
     it { should have_one(:reward).dependent(:destroy) }
     it { should accept_nested_attributes_for :reward }
 

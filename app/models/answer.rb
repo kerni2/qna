@@ -14,4 +14,12 @@ class Answer < ApplicationRecord
 
   validates :author, presence: true
   validates :body, presence: true
+
+  after_create :send_notification
+
+  private
+
+  def send_notification
+    NewAnswerNotificationJob.perform_later(self)
+  end
 end

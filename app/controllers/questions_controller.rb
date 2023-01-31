@@ -19,6 +19,10 @@ class QuestionsController < ApplicationController
     @question_comment = @question.comments.new
     @answer_comment = @answer.comments.new
 
+    if current_user
+      @subscription = Subscription.find_by(question_id: @question.id, user_id: current_user.id)
+    end
+
     gon.question_id = @question.id
     gon.answer_comment = @answer_comment
   end

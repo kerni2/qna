@@ -42,6 +42,9 @@ class Ability
 
     can :read, Reward, user_id: user.id
 
+    can :create, Subscription
+    can :destroy, Subscription, user_id: user.id
+
     can :read, :profile
     can :read, :profiles
   end
