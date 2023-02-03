@@ -1,0 +1,7 @@
+p
+  = 'Answer: '
+  = link_to answer.body, question_path(answer.question)
+p
+  = 'Author: '
+  = answer&.user&.email
+  
