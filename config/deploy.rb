@@ -20,3 +20,5 @@ append :linked_files, "config/database.yml", "config/master.key"
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage"
 
 set :keep_releases, 3
+
+after 'deploy:publishing', 'unicorn:restart'

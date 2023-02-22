@@ -48,6 +48,7 @@ gem 'sinatra', require: false
 gem 'whenever', require: false
 gem 'mysql2', '~> 0.5.4'
 gem 'thinking-sphinx', '~> 5.4'
+gem 'unicorn'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -71,6 +72,7 @@ group :development do
   gem 'capistrano-rvm', require: false
   gem 'capistrano-sidekiq', require: false
   gem 'capistrano-passenger', require: false
+  gem 'capistrano3-unicorn', require: false
 end
 
 group :development, :production do
