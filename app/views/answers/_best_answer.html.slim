@@ -1,52 +1,52 @@
-= content_tag :li, id: "answer-#{@best_answer.id}"
-  b => "[Best]"
-  => @best_answer.body
+- cache @best_answer do
+  = content_tag :li, id: "answer-#{@best_answer.id}"
+    b => "[Best]"
+    => @best_answer.body
 
-  div class="answer-votes"
-    b Rating:
-    => link_to 'like', like_answer_path(@best_answer), \
-                       class: 'answer-like', \
-                       method: :post, \
-                       data: { answer_id: @best_answer.id, type: :json }, \
-                       remote: true \
-                       if can?(:like, @best_answer)
+    div class="answer-votes"
+      b Rating:
+      => link_to 'like', like_answer_path(@best_answer), \
+                         class: 'answer-like', \
+                         method: :post, \
+                         data: { answer_id: @best_answer.id, type: :json }, \
+                         remote: true \
+                         if can?(:like, @best_answer)
 
-    b class="answer-#{@best_answer.id}-rating" => @best_answer.rating
+      b class="answer-#{@best_answer.id}-rating" => @best_answer.rating
 
-    = link_to 'unlike', unlike_answer_path(@best_answer), \
-                        class: 'answer-unlike', \
-                        method: :post, \
-                        data: { answer_id: @best_answer.id, type: :json }, \
-                        remote: true \
-                        if can?(:unlike, @best_answer)
-                          
-  - if @best_answer.question.reward.present?
-    .reward
-      = image_tag url_for(@best_answer.question.reward.image)
-      = @best_answer.question.reward.title
-  - if can?(:update, Answer)
-    => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: @best_answer.id }
-  - if can?(:destroy, Answer)
-    = link_to 'Delete', @best_answer, method: :delete, remote: true
+      = link_to 'unlike', unlike_answer_path(@best_answer), \
+                          class: 'answer-unlike', \
+                          method: :post, \
+                          data: { answer_id: @best_answer.id, type: :json }, \
+                          remote: true \
+                          if can?(:unlike, @best_answer)
+                            
+    - if @best_answer.question.reward.present?
+      .reward
+        = image_tag url_for(@best_answer.question.reward.image)
+        = @best_answer.question.reward.title
+    - if can?(:update, Answer)
+      => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: @best_answer.id }
+    - if can?(:destroy, Answer)
+      = link_to 'Delete', @best_answer, method: :delete, remote: true
 
-  .links
-    p Links:
-    = render 'shared/links', resource: @best_answer, question_id: @best_answer.question.id
-    
-  .answer-files
-    - if @best_answer.files.attached?
-      - @best_answer.files.each do |file|
-        p = link_to file.filename.to_s, url_for(file)
-        - if can?(:destroy, @best_answer)
-          = link_to 'Delete', attachment_path(file, question_id: @best_answer.question.id), method: :delete, local: false
-
-    =content_tag :div, class: "answer-edit-errors-#{@best_answer.id}"
-      = render 'shared/errors', resource: @best_answer
-
-    = form_with model: @best_answer, class: 'hidden', html: { id: "edit-answer-#{@best_answer.id}" }, local: false do |f|
-      p = f.label :files
-      p = f.file_field :files, multiple: true, direct_upload: true
-      p = f.label :body
-      p = f.text_area :body, name: 'answer[body]', rows: 7, cols: 60
-      p = f.submit 'Save'
+    .links
+      p Links:
+      = render 'shared/links', resource: @best_answer, question_id: @best_answer.question.id
       
+    .answer-files
+      - if @best_answer.files.attached?
+        - @best_answer.files.each do |file|
+          p = link_to file.filename.to_s, url_for(file)
+          - if can?(:destroy, @best_answer)
+            = link_to 'Delete', attachment_path(file, question_id: @best_answer.question.id), method: :delete, local: false
+
+      =content_tag :div, class: "answer-edit-errors-#{@best_answer.id}"
+        = render 'shared/errors', resource: @best_answer
+
+      = form_with model: @best_answer, class: 'hidden', html: { id: "edit-answer-#{@best_answer.id}" }, local: false do |f|
+        p = f.label :files
+        p = f.file_field :files, multiple: true, direct_upload: true
+        p = f.label :body
+        p = f.text_area :body, name: 'answer[body]', rows: 7, cols: 60
+        p = f.submit 'Save'

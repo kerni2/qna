@@ -1,65 +1,66 @@
-= content_tag :li, id: "answer-#{answer.id}", class: "card"
+- cache answer do
+  = content_tag :li, id: "answer-#{answer.id}", class: "card"
 
-  => answer.body
+    => answer.body
 
-  .answer-votes
-    b> Rating:
-    => link_to 'like', like_answer_path(answer), \
-                       class: 'answer-like', \
-                       method: :post, \
-                       data: { answer_id: answer.id, type: :json }, \
-                       remote: true \
-                       if can?(:like, answer)
+    .answer-votes
+      b> Rating:
+      => link_to 'like', like_answer_path(answer), \
+                         class: 'answer-like', \
+                         method: :post, \
+                         data: { answer_id: answer.id, type: :json }, \
+                         remote: true \
+                         if can?(:like, answer)
 
-    b class="answer-#{answer.id}-rating" => answer.rating
+      b class="answer-#{answer.id}-rating" => answer.rating
 
-    = link_to 'unlike', unlike_answer_path(answer), \
-                        class: 'answer-unlike', \
-                        method: :post, \
-                        data: { answer_id: answer.id, type: :json }, \
-                        remote: true \
-                        if can?(:unlike, answer)
+      = link_to 'unlike', unlike_answer_path(answer), \
+                          class: 'answer-unlike', \
+                          method: :post, \
+                          data: { answer_id: answer.id, type: :json }, \
+                          remote: true \
+                          if can?(:unlike, answer)
 
-  .actions
-    - if can?(:mark_as_best, answer)
-      => link_to 'Mark as Best', mark_as_best_answer_path(answer), method: :post, local: false
+    .actions
+      - if can?(:mark_as_best, answer)
+        => link_to 'Mark as Best', mark_as_best_answer_path(answer), method: :post, local: false
 
-    - if can?(:update, answer)
-      => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-    - if can?(:destroy, answer)
-      = link_to 'Delete', answer, method: :delete, remote: true
+      - if can?(:update, answer)
+        => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      - if can?(:destroy, answer)
+        = link_to 'Delete', answer, method: :delete, remote: true
 
-    =content_tag :div, class: "answer-edit-errors-#{answer.id}"
-      = render 'shared/errors', resource: answer
-    = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
-      = f.label :body
-      = f.text_area :body, name: 'answer[body]', rows: 7, cols: 60
-      = f.label :files
-      = f.file_field :files, multiple: true, direct_upload: true
-      p#links Links:
-      = f.fields_for :links do |l|
-        = render 'link_fields', f: l
-      = link_to_add_association 'add link', f, :links, \
-                                            'data-association-insertion-node' => '.nested-fields', \
-                                            'data-association-insertion-method' => 'after'
-      = f.submit 'Save'
+      =content_tag :div, class: "answer-edit-errors-#{answer.id}"
+        = render 'shared/errors', resource: answer
+      = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
+        = f.label :body
+        = f.text_area :body, name: 'answer[body]', rows: 7, cols: 60
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true
+        p#links Links:
+        = f.fields_for :links do |l|
+          = render 'link_fields', f: l
+        = link_to_add_association 'add link', f, :links, \
+                                              'data-association-insertion-node' => '.nested-fields', \
+                                              'data-association-insertion-method' => 'after'
+        = f.submit 'Save'
 
-  br
-  b Answer Comments
-  .comments
-    = render answer.comments
+    br
+    b Answer Comments
+    .comments
+      = render answer.comments
 
-  div class="new-answer-#{answer.id}-comment"
-    - if can?(:create, @answer_comment)
-      = render 'comments/form', commentable: answer, comment: @answer_comment
+    div class="new-answer-#{answer.id}-comment"
+      - if can?(:create, @answer_comment)
+        = render 'comments/form', commentable: answer, comment: @answer_comment
 
-  .links
-    p Links:
-    = render 'shared/links', resource: answer, question_id: answer.question.id
+    .links
+      p Links:
+      = render 'shared/links', resource: answer, question_id: answer.question.id
 
-  .answer-files
-    - if answer.files.attached?
-      - answer.files.each do |file|
-        p = link_to file.filename.to_s, url_for(file)
-        - if can?(:destroy, answer)
-          = link_to 'Delete', attachment_path(file, question_id: answer.question.id), method: :delete, local: false
+    .answer-files
+      - if answer.files.attached?
+        - answer.files.each do |file|
+          p = link_to file.filename.to_s, url_for(file)
+          - if can?(:destroy, answer)
+            = link_to 'Delete', attachment_path(file, question_id: answer.question.id), method: :delete, local: false

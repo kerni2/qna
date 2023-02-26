@@ -1,29 +1,30 @@
-= render partial: "question_show", object: @question
+- cache @question do
+  = render partial: "question_show", object: @question
 
-h2 Answers
+  h2 Answers
 
-ol.answers
-  - if @question.best_answer != nil
-    = render 'answers/best_answer', resource: @best_answer
-  = render @answers
+  ol.answers
+    - if @question.best_answer != nil
+      = render 'answers/best_answer', resource: @best_answer
+    = render @answers
 
-.answer-errors
-  = render 'shared/errors', resource: @answer
+  .answer-errors
+    = render 'shared/errors', resource: @answer
 
-= form_with model: [@question, @answer], class: 'new-answer', local: false, data: { type: :json } do |form|
-  p = form.label :body
-  p = form.text_area :body, id: :answer_body, name: 'answer[body]', rows: 7, cols: 60
-  p = form.label :files
-  p = form.file_field :files, multiple: true, direct_upload: true
+  = form_with model: [@question, @answer], class: 'new-answer', local: false, data: { type: :json } do |form|
+    p = form.label :body
+    p = form.text_area :body, id: :answer_body, name: 'answer[body]', rows: 7, cols: 60
+    p = form.label :files
+    p = form.file_field :files, multiple: true, direct_upload: true
 
-  p#links Links:
-  = form.fields_for :links do |l|
-    = render 'link_fields', f: l
+    p#links Links:
+    = form.fields_for :links do |l|
+      = render 'link_fields', f: l
 
-  = link_to_add_association 'add link', form, :links, \
-                                        'data-association-insertion-node' => '.nested-fields', \
-                                        'data-association-insertion-method' => 'after'
+    = link_to_add_association 'add link', form, :links, \
+                                          'data-association-insertion-node' => '.nested-fields', \
+                                          'data-association-insertion-method' => 'after'
 
-  p = form.submit 'Add Answer'
+    p = form.submit 'Add Answer'
 
-p = link_to 'Back to Questions', questions_path
+  p = link_to 'Back to Questions', questions_path

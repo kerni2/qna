@@ -1,10 +1,10 @@
 h2 Questions
 
 br
-
-.questions
-  = render @questions
-  br
+- cache collection_cache_key_for :question do
+  .questions
+    = render @questions
+    br
 
 - if can?(:create, Question)
   = link_to 'Ask question', new_question_path
